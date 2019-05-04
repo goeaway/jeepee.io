@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "target": "es5",
+      "jsx": "react",
+      "module": "commonjs",
+      "lib": ["es6", "dom"],
+      "moduleResolution": "node",
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "types": ["reflect-metadata"]
+    },
+    "exclude": ["node_modules"]
+}
+  
