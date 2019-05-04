@@ -1,3 +1,4 @@
 export const IOC = {
-    ApiService: "ApiService"
+    AuthService: "AuthService",
+    ControllerService: "ControllerService"
 }

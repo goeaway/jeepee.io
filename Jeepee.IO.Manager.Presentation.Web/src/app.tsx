@@ -8,14 +8,17 @@ import "./styles/app.less";
 import { container } from "./ioc";
 import { IOC } from "./consts";
 import getContainer from "inversify-inject-decorators";
-import { IAPIService } from "./service-types";
+import { IAuthService } from "./service-types";
+import { IControllerService } from "./service-types";
 
 let {lazyInject} = getContainer(container);
 
 export default class App extends React.Component {
 
-    @lazyInject(IOC.ApiService)
-    private _apiService: IAPIService;
+    @lazyInject(IOC.AuthService)
+    private _authService: IAuthService;
+    @lazyInject(IOC.ControllerService)
+    private _controllerService: IControllerService;
 
     render() {
         return (

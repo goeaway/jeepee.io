@@ -1,6 +1,9 @@
-export interface IAPIService {
+export interface IAuthService {
     login: () => void;
     logout: () => void;
-    sendControl: () => void;
     requestControl: () => void;
+}
+
+export interface IControllerService {
+    sendCommand: () => void;
 }
