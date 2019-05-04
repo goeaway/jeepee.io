@@ -5,8 +5,18 @@ import Home from "./components/pages/home";
 import About from "./components/pages/about";
 import Login from "./components/pages/login";
 import "./styles/app.less";
+import { container } from "./ioc";
+import { IOC } from "./consts";
+import getContainer from "inversify-inject-decorators";
+import { IAPIService } from "./service-types";
+
+let {lazyInject} = getContainer(container);
 
 export default class App extends React.Component {
+
+    @lazyInject(IOC.ApiService)
+    private _apiService: IAPIService;
+
     render() {
         return (
             <Router>

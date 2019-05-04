@@ -27,15 +27,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentatio
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{66FEC678-883D-466E-869A-4AB0A25A3D16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jeepee.IO.Receiver.Application", "Jeepee.IO.Receiver.Application\Jeepee.IO.Receiver.Application.csproj", "{439A0F2E-199A-4EBB-BEDE-D39C44D603CD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jeepee.IO.Receiver.Application", "Jeepee.IO.Receiver.Application\Jeepee.IO.Receiver.Application.csproj", "{439A0F2E-199A-4EBB-BEDE-D39C44D603CD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jeepee.IO.Authorisation.Presentation.API", "Jeepee.IO.Authorisation.Presentation.API\Jeepee.IO.Authorisation.Presentation.API.csproj", "{A1A06385-2C95-472B-B1E2-31B66E5DDF1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jeepee.IO.Authorisation.Presentation.API", "Jeepee.IO.Authorisation.Presentation.API\Jeepee.IO.Authorisation.Presentation.API.csproj", "{A1A06385-2C95-472B-B1E2-31B66E5DDF1B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jeepee.IO.Controller.Presentation.GUI", "Jeepee.IO.Controller.Presentation.GUI\Jeepee.IO.Controller.Presentation.GUI.csproj", "{18EB469C-784F-4B01-83EC-4C638423891F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jeepee.IO.Controller.Application", "Jeepee.IO.Controller.Application\Jeepee.IO.Controller.Application.csproj", "{303B1193-1731-4988-B9A4-9F0CB8D072F8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jeepee.IO.Controller.Application", "Jeepee.IO.Controller.Application\Jeepee.IO.Controller.Application.csproj", "{303B1193-1731-4988-B9A4-9F0CB8D072F8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jeepee.IO.Receiver.Presentation.API", "Jeepee.IO.Receiver.Presentation.API\Jeepee.IO.Receiver.Presentation.API.csproj", "{7DAE2B1E-2AA9-4926-A311-55F4627DF712}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jeepee.IO.Receiver.Presentation.API", "Jeepee.IO.Receiver.Presentation.API\Jeepee.IO.Receiver.Presentation.API.csproj", "{7DAE2B1E-2AA9-4926-A311-55F4627DF712}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -80,7 +80,7 @@ Global
 		{439A0F2E-199A-4EBB-BEDE-D39C44D603CD} = {1161262A-DAA3-4CD3-858B-6C2FC3EDE477}
 		{A1A06385-2C95-472B-B1E2-31B66E5DDF1B} = {4579F838-0596-4F15-B926-4D14C33CFD6B}
 		{18EB469C-784F-4B01-83EC-4C638423891F} = {41007788-4025-486D-9152-6A620D7FA154}
-		{303B1193-1731-4988-B9A4-9F0CB8D072F8} = {3E53BBF8-D048-4143-AC9A-15E5B05953BB}
+		{303B1193-1731-4988-B9A4-9F0CB8D072F8} = {1FA8F5B7-7380-4346-A039-33C2EB9AA27E}
 		{7DAE2B1E-2AA9-4926-A311-55F4627DF712} = {7C8A2EED-4737-480E-9CF1-EE6428E5F5C8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
