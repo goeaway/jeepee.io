@@ -1,9 +1,12 @@
+import "reflect-metadata";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Redirect } from "react-router-dom";
 import Home from "./components/pages/home";
 import About from "./components/pages/about";
 import Login from "./components/pages/login";
+import Watch from "./components/pages/watch";
+import Play from "./components/pages/play";
 import "./styles/app.less";
 import { container } from "./ioc";
 import { IOC } from "./consts";
@@ -21,6 +24,8 @@ export default class App extends React.Component {
     private _controllerService: IControllerService;
 
     render() {
+        const authed = false;
+
         return (
             <Router>
                 <div className="app">
@@ -28,6 +33,12 @@ export default class App extends React.Component {
                         <ul className="nav__list">
                             <li className="nav__list__item">
                                 <Link to="/">Home</Link>
+                            </li>
+                            <li className="nav__list__item">
+                                <Link to="/watch">Watch</Link>
+                            </li>
+                            <li className="nav__list__item">
+                                <Link to="/play">Play</Link>
                             </li>
                             <li className="nav__list__item">
                                 <Link to="/about">About</Link>
@@ -42,6 +53,8 @@ export default class App extends React.Component {
                         <Route path="/" exact component={Home} />
                         <Route path="/about" component={About} />
                         <Route path="/login" component={Login} />
+                        <Route path="/watch" component={Watch} />
+                        <Route path="/play" render={() => (authed ? <Play /> : <Redirect to="/login" />)} />
                     </div>
                 </div>
             </Router>
