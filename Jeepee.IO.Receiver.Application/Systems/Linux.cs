@@ -1,14 +1,18 @@
 ﻿using Jeepee.IO.Receiver.Application.Abstractions;
 using Jeepee.IO.Receiver.Application.Exceptions;
 using MMALSharp;
-using MMALSharp.Handlers;
-using MMALSharp.Native;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using MMALSharp.Components;
+using MMALSharp.Native;
+using MMALSharp.Ports;
+using MMALSharp.FFmpeg;
+using MMALSharp.Handlers;
 using Unosquare.RaspberryIO;
 using Unosquare.RaspberryIO.Abstractions;
 using Unosquare.WiringPi;
@@ -36,17 +40,33 @@ namespace Jeepee.IO.Receiver.Application.Systems
                 new Channel { EnablePin = 18, FirstPin = 24, SecondPin = 23 },
                 new Channel { EnablePin = 16, FirstPin = 21, SecondPin = 20 }
             };
+
+            StreamTask();
         }
 
-        public Stream GetImage()
+        private Task StreamTask()
         {
-            using (var handler = new ImageStreamCaptureHandler("/home/pi/images/", "jpg"))
+            return Task.Run(async() =>
             {
-                _logger.Information("Taking picture");
-                Task.Run(async () => await _camera.TakePicture(handler, MMALEncoding.JPEG, MMALEncoding.I420));
-            }
+                using (var ffCaptureHandler = FFmpegCaptureHandler.RTMPStreamer("stream", "rtmp://127.0.0.1:9000/live"))
+                using (var vidEncoder = new MMALVideoEncoder(ffCaptureHandler))
+                using (var renderer = new MMALVideoRenderer())
+                {
+                    _camera.ConfigureCameraSettings();
+                    var portConf = new MMALPortConfig(MMALEncoding.H264, MMALEncoding.I420, 25, 10, MMALVideoEncoder.MaxBitrateLevel4, null);
 
-            return new MemoryStream();
+                    vidEncoder.ConfigureOutputPort(portConf);
+
+                    _camera.Camera.VideoPort.ConnectTo(vidEncoder);
+                    _camera.Camera.PreviewPort.ConnectTo(renderer);
+
+                    await Task.Delay(2000);
+
+                    var cts = new CancellationTokenSource(TimeSpan.FromMinutes(3));
+
+                    await _camera.ProcessAsync(_camera.Camera.VideoPort, cts.Token);
+                }
+            });
         }
 
         public Task SetPin(int pinNum, bool on)
