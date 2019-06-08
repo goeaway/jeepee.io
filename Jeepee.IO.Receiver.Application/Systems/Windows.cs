@@ -34,10 +34,5 @@ namespace Jeepee.IO.Receiver.Application.Systems
         public void Dispose()
         {
         }
-
-        public Stream GetImage()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

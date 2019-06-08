@@ -32,18 +32,18 @@ namespace Jeepee.IO.Receiver.Presentation.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme =
-                    JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme =
-                    JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(o =>
-            {
-                o.Authority = "http://localhost:59418";
-                o.Audience = "tankreceiver";
-                o.RequireHttpsMetadata = false;
-            });
+            //services.AddAuthentication(options =>
+            //{
+            //    options.DefaultAuthenticateScheme =
+            //        JwtBearerDefaults.AuthenticationScheme;
+            //    options.DefaultChallengeScheme =
+            //        JwtBearerDefaults.AuthenticationScheme;
+            //}).AddJwtBearer(o =>
+            //{
+            //    o.Authority = "http://localhost:59418";
+            //    o.Audience = "tankreceiver";
+            //    o.RequireHttpsMetadata = false;
+            //});
 
             services
                 .AddMvc()
@@ -74,7 +74,7 @@ namespace Jeepee.IO.Receiver.Presentation.API
             app.UseExceptionHandler(ExceptionHandler);
 
             //app.UseHttpsRedirection();
-            app.UseAuthentication();
+            //app.UseAuthentication();
             app.UseMvc();
 
             app.UseForwardedHeaders(new ForwardedHeadersOptions
@@ -102,7 +102,7 @@ namespace Jeepee.IO.Receiver.Presentation.API
                     var logger = app.ApplicationServices.GetService<ILogger>();
                     logger.Error(exception, "Error occured when processing request {uri}", uri);
 
-                    await ctx.Response.WriteAsync($"Error Ocurred: {exception.Message}");
+                    await ctx.Response.WriteAsync($"Error Ocurred: {exception.Message}. {(exception.InnerException?.Message)}");
                 });
             });
         }

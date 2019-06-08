@@ -24,16 +24,13 @@ namespace Jeepee.IO.Receiver.Application.Systems
         private readonly ILogger _logger;
         private readonly MMALCamera _camera;
 
+        public List<IChannel> Channels { get; }
+
         public Linux(ILogger logger)
         {
             _logger = logger;
             _camera = MMALCamera.Instance;
-        }
 
-        public List<IChannel> Channels { get; }
-
-        public Linux()
-        {
             Pi.Init<BootstrapWiringPi>();
             Channels = new List<IChannel>
             {
@@ -48,23 +45,31 @@ namespace Jeepee.IO.Receiver.Application.Systems
         {
             return Task.Run(async() =>
             {
-                using (var ffCaptureHandler = FFmpegCaptureHandler.RTMPStreamer("stream", "rtmp://127.0.0.1:9000/live"))
-                using (var vidEncoder = new MMALVideoEncoder(ffCaptureHandler))
-                using (var renderer = new MMALVideoRenderer())
+                try
                 {
-                    _camera.ConfigureCameraSettings();
-                    var portConf = new MMALPortConfig(MMALEncoding.H264, MMALEncoding.I420, 25, 10, MMALVideoEncoder.MaxBitrateLevel4, null);
+                    using (var ffCaptureHandler = FFmpegCaptureHandler.RTMPStreamer("stream", "rtmp://127.0.0.1:1935/live"))
+                    using (var vidEncoder = new MMALVideoEncoder(ffCaptureHandler))
+                    using (var renderer = new MMALVideoRenderer())
+                    {
+                        _camera.ConfigureCameraSettings();
+                        var portConf = new MMALPortConfig(MMALEncoding.H264, MMALEncoding.I420, 25, 10, MMALVideoEncoder.MaxBitrateLevel4, null);
 
-                    vidEncoder.ConfigureOutputPort(portConf);
+                        vidEncoder.ConfigureOutputPort(portConf);
 
-                    _camera.Camera.VideoPort.ConnectTo(vidEncoder);
-                    _camera.Camera.PreviewPort.ConnectTo(renderer);
+                        _camera.Camera.VideoPort.ConnectTo(vidEncoder);
+                        _camera.Camera.PreviewPort.ConnectTo(renderer);
 
-                    await Task.Delay(2000);
+                        await Task.Delay(2000);
 
-                    var cts = new CancellationTokenSource(TimeSpan.FromMinutes(3));
+                        var cts = new CancellationTokenSource(TimeSpan.FromMinutes(3));
 
-                    await _camera.ProcessAsync(_camera.Camera.VideoPort, cts.Token);
+                        await _camera.ProcessAsync(_camera.Camera.VideoPort, cts.Token);
+                    }
+                }
+                catch (Exception e)
+                {
+                    _logger.Error(e, "Error ocurred when trying to stream camera feed to rtmp");
+                    throw new RTMPStreamException("Streaming exception", e);
                 }
             });
         }

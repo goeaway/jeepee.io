@@ -14,7 +14,7 @@ namespace Jeepee.IO.Receiver.Presentation.API.Controllers
         [Route("send")]
         public IActionResult Send()
         {
-            return Ok();
+            return Content("Pong");
         }
     }
 }
