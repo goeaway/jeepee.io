@@ -1,4 +1,5 @@
-﻿using Jeepee.IO.Receiver.Application.Abstractions;
+﻿using Jeepee.IO.Receiver.Application;
+using Jeepee.IO.Receiver.Application.Abstractions;
 using Jeepee.IO.Receiver.Application.Systems;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -26,7 +27,7 @@ namespace Jeepee.IO.Receiver.Presentation.API
 
         public static IServiceCollection AddSystem(this IServiceCollection collection)
         {
-            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+            if (Utils.IsWindows())
             {
                 collection.AddSingleton<ISystem, Windows>();
             }

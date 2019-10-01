@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using FluentValidation.AspNetCore;
 using Jeepee.IO.Receiver.Application.Abstractions;
 using Jeepee.IO.Receiver.Application.Behaviours;
+using Jeepee.IO.Receiver.Application.Providers;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -32,19 +34,6 @@ namespace Jeepee.IO.Receiver.Presentation.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultAuthenticateScheme =
-            //        JwtBearerDefaults.AuthenticationScheme;
-            //    options.DefaultChallengeScheme =
-            //        JwtBearerDefaults.AuthenticationScheme;
-            //}).AddJwtBearer(o =>
-            //{
-            //    o.Authority = "http://localhost:59418";
-            //    o.Audience = "tankreceiver";
-            //    o.RequireHttpsMetadata = false;
-            //});
-
             services
                 .AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
@@ -55,6 +44,7 @@ namespace Jeepee.IO.Receiver.Presentation.API
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ExceptionWrapperBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestLoggerBehaviour<,>));
+            services.AddTransient<IChannelProvider, ChannelProvider>();
             services.AddSystem();
         }
 
