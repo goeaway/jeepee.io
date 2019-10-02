@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Jeepee.IO.Receiver.Application.Abstractions;
+using Jeepee.IO.Receiver.Application.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Serilog;
@@ -26,7 +27,7 @@ namespace Jeepee.IO.Receiver.Application.Providers
                 return "";
             }
 
-            return Path.Combine("jeepee", "app", "channels.json");
+            return "/" + Path.Combine("jeepee", "app", "channels.json");
         }
 
         public IEnumerable<IChannel> GetChannels()
@@ -53,7 +54,7 @@ namespace Jeepee.IO.Receiver.Application.Providers
                 using (var reader = File.OpenText(path))
                 {
                     var text = reader.ReadToEnd();
-                    _cache = JsonConvert.DeserializeObject<IEnumerable<IChannel>>(text, settings);
+                    _cache = JsonConvert.DeserializeObject<ChannelsConfig>(text, settings).Channels;
                     return _cache;
                 }
             }
