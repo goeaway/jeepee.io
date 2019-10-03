@@ -1,0 +1,49 @@
+version: "2"
+networks:
+  app_bridge:
+    driver: bridge
+services:
+  # nginx service - handles both http and rtmp 
+  nginx:
+    image: siouija/nginx-rtmp
+    container_name: nginx-container
+    restart: always
+    ports: 
+      - "80:80"
+      - "443:443"
+      - "1935:1935"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - jeepee
+    networks:
+      - app_bridge
+
+  # ffmpeg service - encodes video from 
+  ffmpeg:
+    image: siouija/ffmpeg
+    container_name: ffmpeg-container
+    entrypoint: sh
+    restart: always
+    volumes:
+      - /usr/bin/raspivid:/usr/bin/raspivid # container does not have raspivid, pass it over
+    command:
+      - -c
+      - /user/bin/raspivid -n -mm matrix -w 1280 -h 720 -fps 25 -g 100 -t 0 -b 2000000 -o - | ffmpeg -y -f h264 -i - -c:v copy -map 0:0 -f flv $$RTMP_URI
+    environment:
+      - RTMP_URI=rtmp://nginx:1935/jeepee
+    networks:
+      - app_bridge
+    depends_on:
+      - nginx
+
+  # jeepee service - application, sits behind nginx and controls the pins
+  jeepee:
+    image: siouija/jeepee
+    container_name: jeepee-container
+    privileged: true # required so we can interact with the pins
+    restart: always
+    volumes:
+      - ./channels.json:/jeepee/app/channels.json
+    networks:
+      - app_bridge
