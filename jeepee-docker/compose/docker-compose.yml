@@ -44,6 +44,6 @@ services:
     privileged: true # required so we can interact with the pins
     restart: always
     volumes:
-      - ./channels.json:/jeepee/app/channels.json
+      - ./channels.json:/jeepee/app/channels.json:ro
     networks:
       - app_bridge
