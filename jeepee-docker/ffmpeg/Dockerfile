@@ -54,4 +54,4 @@ make install -j4 && \
 hash -r
 
 # assert it doesn't error
-CMD ["ffmpeg"]
+CMD ["~/bin/ffmpeg", "--help"]
