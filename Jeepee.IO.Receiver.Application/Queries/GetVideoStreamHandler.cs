@@ -20,7 +20,7 @@ namespace Jeepee.IO.Receiver.Application.Queries
 
         public Task<Stream> Handle(GetVideoStream request, CancellationToken cancellationToken)
         {
-            return Task.Run(() => _system.GetImage());
+            return Task.Run(() => new MemoryStream() as Stream);
         }
     }
 }

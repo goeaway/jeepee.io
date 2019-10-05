@@ -10,6 +10,5 @@ namespace Jeepee.IO.Receiver.Application.Abstractions
     {
         List<IChannel> Channels { get; }
         Task SetPin(int pinNumber, bool on);
-        Stream GetImage();
     }
 }

@@ -1,0 +1,14 @@
+{
+    "channels": [
+      {
+        "firstPin": 24,
+        "secondPin": 23,
+        "enablePin": 18
+      },
+      {
+        "firstPin": 21,
+        "secondPin": 20,
+        "enablePin": 16
+      }
+    ]
+  }
