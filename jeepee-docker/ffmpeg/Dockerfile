@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM balenalib/rpi-raspbian
 
 RUN apt-get update -qq && apt-get -y install \
   autoconf \
@@ -21,22 +21,26 @@ RUN apt-get update -qq && apt-get -y install \
   wget \
   zlib1g-dev
 
-RUN mkdir ~/ffmpeg_sources ~/bin
+RUN mkdir /ffmpeg
+ENV HOME /ffmpeg
+RUN mkdir $HOME/ffmpeg_sources $HOME/bin
 
 # x264
-RUN cd ~/ffmpeg_sources && \
-git -C x264 pull 2> /dev/null || git clone --depth 1 https://code.videolan.org/videolan/x264.git && \
-cd x264 && \
-PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --enable-static --enable-pic && \
+WORKDIR $HOME/ffmpeg_sources 
+RUN git -C x264 pull 2> /dev/null || git clone --depth 1 https://code.videolan.org/videolan/x264.git 
+
+WORKDIR $HOME/ffmpeg_sources/x264
+RUN PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --enable-static --enable-pic && \
 PATH="$HOME/bin:$PATH" make && \
 make install -j4
 
 # ffmpeg
-RUN cd ~/ffmpeg_sources && \
-wget -O ffmpeg-snapshot.tar.bz2 https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2 && \
-tar xjvf ffmpeg-snapshot.tar.bz2 && \
-cd ffmpeg && \
-PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
+WORKDIR $HOME/ffmpeg_sources
+RUN wget -O ffmpeg-snapshot.tar.bz2 https://ffmpeg.org/releases/ffmpeg-snapshot.tar.bz2 && \
+tar xjvf ffmpeg-snapshot.tar.bz2
+
+WORKDIR $HOME/ffmpeg_sources/ffmpeg
+RUN PATH="$HOME/bin:$PATH" PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" ./configure \
   --prefix="$HOME/ffmpeg_build" \
   --pkg-config-flags="--static" \
   --extra-cflags="-I$HOME/ffmpeg_build/include" \
@@ -53,5 +57,8 @@ PATH="$HOME/bin:$PATH" make && \
 make install -j4 && \
 hash -r
 
+# add what's explained here to get uv4l
+# https://stackoverflow.com/a/45268920
+
 # assert it doesn't error
-CMD ["~/bin/ffmpeg", "--help"]
+CMD ["$HOME/bin/ffmpeg", "--help"]
