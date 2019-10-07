@@ -29,7 +29,7 @@ services:
       - sh
     command:
       - -c
-      - raspivid -n -mm matrix -w 1280 -h 720 -fps 25 -g 100 -t 0 -b 2000000 -o - # | $$HOME/bin/ffmpeg -y -f h264 -i - -c:v copy -map 0:0 -f flv $$RTMP_URI
+      - raspivid -n -mm matrix -w 1280 -h 720 -fps 25 -g 100 -t 0 -b 2000000 -o - | $$HOME/bin/ffmpeg -y -f h264 -i - -c:v copy -map 0:0 -f flv $$RTMP_URI
     environment:
       - RTMP_URI=rtmp://nginx:1935/jeepee
     networks:
