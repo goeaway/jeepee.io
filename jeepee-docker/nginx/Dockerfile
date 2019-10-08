@@ -52,5 +52,7 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
 # Set up config file
 COPY nginx.conf /etc/nginx/nginx.conf
 
+RUN mkdir -p /hls/stream
+
 EXPOSE 1935
 CMD ["nginx", "-g", "daemon off;"]
