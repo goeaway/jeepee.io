@@ -20,20 +20,20 @@ services:
       - app_bridge
 
   # ffmpeg service - encodes video from 
-  ffmpeg:
-    image: siouija/ffmpeg
-    container_name: ffmpeg-container
-    restart: always
-    privileged: true
-    entrypoint: 
-      - sh
-    command:
-      - -c
-      - raspivid -n -mm matrix -w 1280 -h 720 -fps 25 -g 100 -t 0 -b 2000000 -o - | $$HOME/bin/ffmpeg -y -f h264 -i - -c:v copy -map 0:0 -f flv rtmp://nginx:1935/jeepee/test
-    networks:
-      - app_bridge
-    depends_on:
-      - nginx
+  # ffmpeg:
+  #   image: siouija/ffmpeg
+  #   container_name: ffmpeg-container
+  #   restart: always
+  #   privileged: true
+  #   entrypoint: 
+  #     - sh
+  #   command:
+  #     - -c
+  #     - raspivid -n -t 0 -h 480 -w 854 -fps 15 -b 1080000 -o - | $$HOME/bin/ffmpeg -i - -c:v copy -f flv 'rtmp://nginx:1935/jeepee/test'
+  #   networks:
+  #     - app_bridge
+  #   depends_on:
+  #     - nginx
 
   # jeepee service - application, sits behind nginx and controls the pins
   jeepee:
