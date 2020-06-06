@@ -19,6 +19,7 @@ namespace Jeepee.IO.Receiver.Presentation.API
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .UseWebRoot("wwwroot")
                 .UseStartup<Startup>();
     }
 }

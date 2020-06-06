@@ -6,6 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\src\components\app.tsx" />
+    <Content Remove="wwwroot\src\config\development.ts" />
+    <Content Remove="wwwroot\src\config\production.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.6.2" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="8.6.2" />
     <PackageReference Include="MediatR" Version="8.0.1" />
@@ -27,6 +33,25 @@
     <Reference Include="Pippin.Extensions.Microsoft.DependencyInjection">
       <HintPath>..\..\Pippin\Pippin.Extensions.Microsoft.DependencyInjection\bin\Debug\netstandard2.0\Pippin.Extensions.Microsoft.DependencyInjection.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Monitor\Index.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="wwwroot\src\components\app.tsx" />
+    <TypeScriptCompile Include="wwwroot\src\config\development.ts" />
+    <TypeScriptCompile Include="wwwroot\src\config\production.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Views\Monitor\Index.cshtml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\dist\bundle.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

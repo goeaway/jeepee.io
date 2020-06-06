@@ -8,5 +8,9 @@ namespace Jeepee.IO.Receiver.Presentation.API.Hubs
 {
     public class MonitorHub : Hub
     {
+        public MonitorHub()
+        {
+
+        }
     }
 }

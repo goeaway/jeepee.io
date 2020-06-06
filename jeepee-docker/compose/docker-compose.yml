@@ -5,43 +5,24 @@ networks:
 services:
   # nginx service - handles both http and rtmp 
   nginx:
-    image: siouija/nginx
+    image: nginx
     container_name: nginx-container
     restart: always
     ports: 
       - "80:80"
       - "443:443"
-      - "1935:1935"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - jeepee
     networks:
       - app_bridge
-
-  # ffmpeg service - encodes video from 
-  # ffmpeg:
-  #   image: siouija/ffmpeg
-  #   container_name: ffmpeg-container
-  #   restart: always
-  #   privileged: true
-  #   entrypoint: 
-  #     - sh
-  #   command:
-  #     - -c
-  #     - raspivid -n -t 0 -h 480 -w 854 -fps 15 -b 1080000 -o - | $$HOME/bin/ffmpeg -i - -c:v copy -f flv 'rtmp://nginx:1935/jeepee/test'
-  #   networks:
-  #     - app_bridge
-  #   depends_on:
-  #     - nginx
-
+      
   # jeepee service - application, sits behind nginx and controls the pins
   jeepee:
     image: siouija/jeepee
     container_name: jeepee-container
     privileged: true # required so we can interact with the pins
     restart: always
-    volumes:
-      - ./channels.json:/jeepee/app/channels.json:ro
     networks:
       - app_bridge

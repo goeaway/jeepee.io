@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Pippin;
@@ -35,7 +36,7 @@ namespace Jeepee.IO.Receiver.Presentation.API
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddControllers()
+                .AddMvc()
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
 
             services.AddLogger();
@@ -43,13 +44,11 @@ namespace Jeepee.IO.Receiver.Presentation.API
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestLoggerBehaviour<,>));
             services.AddConfiguration(Configuration);
+            services.AddSignalR();
 
             services.AddPippin(options =>
             {
-                options.AddAdapter(() => new ActionPinAdapter((number, on) =>
-                {
-                    
-                }));
+                options.AddAdapter<HubPinAdapter<MonitorHub>>();
             });
         }
 
@@ -57,13 +56,14 @@ namespace Jeepee.IO.Receiver.Presentation.API
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseExceptionHandler(ExceptionHandler);
+            app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseCors();
             app.UseRouting();
 
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
-                endpoints.MapHub<MonitorHub>("/monitor");
+                endpoints.MapHub<MonitorHub>("/monitorHub");
             });
         }
 
