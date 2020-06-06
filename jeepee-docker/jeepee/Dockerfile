@@ -11,5 +11,6 @@ RUN curl -L https://github.com/goeaway/jeepee.io/releases/latest/download/jeepee
 RUN tar -xzf jeepee-receiver.tar.gz
 
 EXPOSE 80
+EXPOSE 443
 # Run jeepee
 ENTRYPOINT ["dotnet", "/jeepee/app/Jeepee.IO.Receiver.Presentation.API.dll"]
