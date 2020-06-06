@@ -7,8 +7,8 @@ RUN mkdir /jeepee/app
 WORKDIR /jeepee/app
 
 # Get jeepee
-RUN curl -L https://github.com/goeaway/jeepee.io/releases/latest/download/jeepee-receiver.tar.gz --output jeepee-receiver.tar.gz
-RUN tar -xzf jeepee-receiver.tar.gz
+RUN curl -L https://github.com/goeaway/jeepee.io/releases/latest/download/app.tar.gz --output app.tar.gz
+RUN tar -xzf app.tar.gz
 
 EXPOSE 80
 EXPOSE 443
