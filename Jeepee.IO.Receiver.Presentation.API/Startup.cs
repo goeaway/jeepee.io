@@ -5,19 +5,19 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using FluentValidation.AspNetCore;
-using Jeepee.IO.Receiver.Application.Abstractions;
 using Jeepee.IO.Receiver.Application.Behaviours;
-using Jeepee.IO.Receiver.Application.Providers;
+using Jeepee.IO.Receiver.Application.Commands;
+using Jeepee.IO.Receiver.Presentation.API.Hubs;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Pippin;
+using Pippin.Core;
 using Serilog;
 
 namespace Jeepee.IO.Receiver.Presentation.API
@@ -35,71 +35,50 @@ namespace Jeepee.IO.Receiver.Presentation.API
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddControllers()
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly()));
 
             services.AddLogger();
-            services.AddMediatR(Assembly.GetAssembly(typeof(ISystem)));
-            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ExceptionWrapperBehaviour<,>));
+            services.AddMediatR(Assembly.GetAssembly(typeof(UpdateChannelHandler)));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestLoggerBehaviour<,>));
-            services.AddTransient<IChannelProvider, ChannelProvider>();
-            services.AddSystem();
+            services.AddConfiguration(Configuration);
+
+            services.AddPippin(options =>
+            {
+                options.AddAdapter(() => new ActionPinAdapter((number, on) =>
+                {
+                    
+                }));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApplicationLifetime lifetime, ISystem system)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                //app.UseHsts();
-            }
-
             app.UseExceptionHandler(ExceptionHandler);
+            app.UseHttpsRedirection();
+            app.UseCors();
+            app.UseRouting();
 
-            //app.UseHttpsRedirection();
-            //app.UseAuthentication();
-            app.UseMvc();
-
-            app.UseForwardedHeaders(new ForwardedHeadersOptions
-            {
-                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
-            });
-
-
-            // register stopping event (dispose of pi camera stream)
-            lifetime.ApplicationStopping.Register(OnAppStopping, system);
-        }
-
-        private void ExceptionHandler(IApplicationBuilder app)
-        {
-            app.Run(ctx =>
-            {
-                return Task.Run(async () =>
-                {
-                    ctx.Response.StatusCode = 500;
-                    var exHandlerPathFeature = ctx.Features.Get<IExceptionHandlerPathFeature>();
-
-                    var exception = exHandlerPathFeature.Error;
-                    var uri = ctx.Request.Path;
-
-                    var logger = app.ApplicationServices.GetService<ILogger>();
-                    logger.Error(exception, "Error occured when processing request {uri}", uri);
-
-                    await ctx.Response.WriteAsync($"Error Ocurred: {exception.Message}. {(exception.InnerException?.Message)}");
-                });
+            app.UseEndpoints(endpoints => {
+                endpoints.MapControllers();
+                endpoints.MapHub<MonitorHub>("/monitor");
             });
         }
 
-        private void OnAppStopping(object system)
+        private void ExceptionHandler(IApplicationBuilder app) => app.Run(async ctx =>
         {
-            ((IDisposable)system).Dispose();
-        }
+            ctx.Response.StatusCode = 500;
+            var exHandlerPathFeature = ctx.Features.Get<IExceptionHandlerPathFeature>();
+
+            var exception = exHandlerPathFeature.Error;
+            var uri = ctx.Request.Path;
+
+            var logger = app.ApplicationServices.GetService<ILogger>();
+            logger.Error(exception, "Error occurred when processing request {uri}", uri);
+
+            await ctx.Response.WriteAsync($"Error Occurred: {exception.Message}. {(exception.InnerException?.Message)}");
+        });
     }
 }

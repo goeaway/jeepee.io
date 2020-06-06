@@ -1,6 +1,5 @@
 ﻿using Jeepee.IO.Receiver.Application;
-using Jeepee.IO.Receiver.Application.Abstractions;
-using Jeepee.IO.Receiver.Application.Systems;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using System;
@@ -25,18 +24,9 @@ namespace Jeepee.IO.Receiver.Presentation.API
             return collection;
         }
 
-        public static IServiceCollection AddSystem(this IServiceCollection collection)
+        public static IServiceCollection AddConfiguration(this IServiceCollection collection, IConfiguration configuration)
         {
-            if (Utils.IsWindows())
-            {
-                collection.AddSingleton<ISystem, Windows>();
-            }
-            else
-            {
-                collection.AddSingleton<ISystem, Linux>();
-            }
-
-            return collection;
+            return collection.AddSingleton(configuration);
         }
     }
 }

@@ -6,15 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Jeepee.IO.Receiver.Presentation.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class PingController : Controller
     {
-        [HttpGet]
-        [Route("send")]
-        public IActionResult Send()
+        [HttpGet("send")]
+        public string Send()
         {
-            return Content("Pong");
+            return "Pong";
         }
     }
 }

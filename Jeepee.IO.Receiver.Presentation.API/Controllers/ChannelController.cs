@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Jeepee.IO.Receiver.Presentation.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class ChannelController : Controller
     {
@@ -20,8 +20,7 @@ namespace Jeepee.IO.Receiver.Presentation.API.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost]
-        [Route("set")]
+        [HttpPost("set")]
         public IActionResult Set(UpdateChannelModel model)
         {
             _mediator.Send(new UpdateChannel(model.Channel, model.Direction, model.On));
