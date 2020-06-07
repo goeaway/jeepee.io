@@ -1,4 +1,5 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim-arm32v7
+ARG ASPNET_VERSION=3.1-buster-slim-arm32v7
+FROM mcr.microsoft.com/dotnet/core/aspnet:${ASPNET_VERSION}
 
 # Create Dirs
 RUN mkdir /jeepee
@@ -11,6 +12,5 @@ RUN curl -L https://github.com/goeaway/jeepee.io/releases/latest/download/app.ta
 RUN tar -xzf app.tar.gz
 
 EXPOSE 80
-EXPOSE 443
 # Run jeepee
-ENTRYPOINT ["dotnet", "/jeepee/app/Jeepee.IO.Receiver.Presentation.API.dll"]
+ENTRYPOINT ["dotnet", "Jeepee.IO.Receiver.Presentation.API.dll"]

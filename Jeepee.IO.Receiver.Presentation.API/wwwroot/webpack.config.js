@@ -1,13 +1,13 @@
 const path = require("path");
 
 
-module.exports = env => {
-    return {
+module.exports = [
+    {
         entry: "./src/index.tsx",
-        mode: env.production === "production" ? "production" : "development",
+        mode: "production",
         output: {
             path: path.resolve(__dirname, "dist"),
-            filename: "bundle.js",
+            filename: "bundle-production.js",
             publicPath: "/output"
         },
         resolve: {
@@ -15,17 +15,43 @@ module.exports = env => {
             alias: {
                 "react": "preact/compat",
                 "react-dom": "preact/compat",
-                "@config/production": path.join(__dirname, "src", "config", env.production === "production" ? "production" : "development"),
+                "@config/production": path.join(__dirname, "src", "config", "production"),
             }
         },
         module: {
             rules: [
-                { 
-                    test: /\.tsx?$/, 
-                    loader: 'ts-loader', 
-                    exclude: /node_modules/ 
+                {
+                    test: /\.tsx?$/,
+                    loader: 'ts-loader',
+                    exclude: /node_modules/
+                }
+            ]
+        }
+    },
+    {
+        entry: "./src/index.tsx",
+        mode: "development",
+        output: {
+            path: path.resolve(__dirname, "dist"),
+            filename: "bundle-development.js",
+            publicPath: "/output"
+        },
+        resolve: {
+            extensions: [".ts", ".tsx", ".js"],
+            alias: {
+                "react": "preact/compat",
+                "react-dom": "preact/compat",
+                "@config/production": path.join(__dirname, "src", "config", "development"),
+            }
+        },
+        module: {
+            rules: [
+                {
+                    test: /\.tsx?$/,
+                    loader: 'ts-loader',
+                    exclude: /node_modules/
                 }
             ]
         }
     }
-}
+]

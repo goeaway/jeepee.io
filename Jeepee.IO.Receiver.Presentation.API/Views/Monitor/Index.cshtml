@@ -7,17 +7,19 @@
 </head>
 <body>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         html, body {
             width: 100vw;
             height: 100vh;
             font-family: 'Roboto', sans-serif;
+            margin:0;
         }
 
-        * {
-            box-sizing: border-box;
-        }
     </style>
-
-    <script src="/dist/bundle.js" type="text/javascript"></script>
+    
+    <script src="/dist/bundle-@(ViewBag.Mode).js" type="text/javascript"></script>
 </body>
 </html>

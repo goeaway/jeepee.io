@@ -1,4 +1,4 @@
 export var config = {
-    apiURL: "https://localhost:44366",
+    apiURL: "http://192.168.0.20",
 };
 //# sourceMappingURL=production.js.map

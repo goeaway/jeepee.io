@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dist": "webpack -p --env.production=production"
+    "dist": "webpack -p"
   },
   "author": "",
   "license": "ISC",
