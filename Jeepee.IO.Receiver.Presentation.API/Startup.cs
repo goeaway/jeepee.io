@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
@@ -63,7 +64,10 @@ namespace Jeepee.IO.Receiver.Presentation.API
 
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
-                endpoints.MapHub<MonitorHub>("/monitorHub");
+                endpoints.MapHub<MonitorHub>("/monitorHub", options =>
+                {
+                    options.Transports = HttpTransportType.LongPolling;
+                });
             });
         }
 
