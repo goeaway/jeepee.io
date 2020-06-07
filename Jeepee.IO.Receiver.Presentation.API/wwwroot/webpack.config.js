@@ -17,7 +17,7 @@ module.exports = [
                 "react-dom": "preact/compat",
                 "@config/production": path.join(__dirname, "src", "config", "production"),
             }
-        },
+        }, 
         module: {
             rules: [
                 {
