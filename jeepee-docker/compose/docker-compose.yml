@@ -3,7 +3,7 @@ networks:
   app_bridge:
     driver: bridge
 services:
-  # nginx service - handles both http and rtmp 
+  # nginx service - handles incoming requests to the server and forwards to app if applicable
   nginx:
     image: nginx
     container_name: nginx-container
@@ -13,12 +13,14 @@ services:
       - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./jeepee.crt:/etc/nginx/jeepee.crt:ro
+      - ./jeepee.key:/etc/nginx/jeepee.key:ro
     depends_on:
       - jeepee
     networks:
       - app_bridge
       
-  # jeepee service - application, sits behind nginx and controls the pins
+  # jeepee service - application, sits behind nginx and controls the pins, camera and monitoring modules
   jeepee:
     image: siouija/jeepee
     container_name: jeepee-container
