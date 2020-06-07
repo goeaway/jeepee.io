@@ -21,7 +21,7 @@ namespace Jeepee.IO.Receiver.Presentation.API.Controllers
         public IActionResult Index()
         {
             var mode = _configuration["Mode"];
-            ViewBag.Mode = mode;
+            ViewBag.Mode = mode.ToLower();
             return View();
         }
     }
