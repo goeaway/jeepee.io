@@ -3,13 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Content Remove="wwwroot\src\components\app.tsx" />
-    <Content Remove="wwwroot\src\config\development.ts" />
-    <Content Remove="wwwroot\src\config\production.ts" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.6.2" />
@@ -33,19 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TypeScriptCompile Include="wwwroot\src\components\app.tsx" />
-    <TypeScriptCompile Include="wwwroot\src\config\development.ts" />
-    <TypeScriptCompile Include="wwwroot\src\config\production.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Update="Views\Monitor\Index.cshtml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\dist\bundle-development.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Update="wwwroot\dist\bundle-production.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

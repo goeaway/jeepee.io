@@ -10,7 +10,6 @@ namespace Jeepee.IO.Receiver.Presentation.API.Controllers
     [ApiController]
     public class PingController : Controller
     {
-        [HttpGet("send")]
         public string Send()
         {
             return "Pong";
