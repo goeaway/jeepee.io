@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace Jeepee.IO.Manager.Presentation.API.Models
+namespace Jeepee.IO.Core.Models.DTOs
 {
-    public class ForwardControlModel
+    public class JeepeeControlDTO
     {
         public int Channel { get; set; }
         public bool Direction { get; set; }

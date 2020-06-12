@@ -5,8 +5,15 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Jeepee.IO.Manager.Presentation.API.Models;
+using Jeepee.IO.Core.Extensions;
+using Jeepee.IO.Core.Models.DTOs;
+using Jeepee.IO.Core.Models.Models;
+using Jeepee.IO.Manager.Application.Abstractions;
+using Jeepee.IO.Manager.Application.Commands;
+using Jeepee.IO.Manager.Application.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -17,49 +24,27 @@ namespace Jeepee.IO.Manager.Presentation.API.Controllers
     [Route("[controller]")]
     public class JeepeeController : Controller
     {
-        private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IMediator _mediator;
 
-        public JeepeeController(IConfiguration configuration)
+        public JeepeeController(IMediator mediator, IHttpContextAccessor contextAccessor)
         {
-            _configuration = configuration;
+            _mediator = mediator;
+            _contextAccessor = contextAccessor;
         }
 
-        [HttpGet("getavailable")]
-        public async Task<IEnumerable<string>> GetAvailableInstances()
+        [HttpGet("instancereport")]
+        public Task<IEnumerable<JeepeeInstanceReportDTO>> InstanceReport()
         {
-            var instanceIps = _configuration.GetSection("Jeepees").AsEnumerable().Where(c => c.Value != null).Select(c => c.Value);
-            var successfulPings = new List<string>();
-
-            if(instanceIps.Any())
-            {
-                var client = new HttpClient();
-
-                foreach(var ip in instanceIps)
-                {
-                    var result = await client.GetAsync($"http://{ip}/ping");
-
-                    if(result.StatusCode == System.Net.HttpStatusCode.OK)
-                    {
-                        successfulPings.Add(ip);
-                    }
-                }
-            }
-
-            return successfulPings;
+            return _mediator.Send(new GetInstanceReportRequest());
         }
 
         [HttpPost("forwardcontrol")]
-        //[Authorize]
-        public async Task ForwardControl(ForwardControlModel model)
+        [Authorize]
+        public async Task ForwardControl(JeepeeControlDTO dto)
         {
-            // get ip address from store
-            // if none for user, this user isn't allowed to control, return 403
-
-            var ip = "localhost:61395";
-
-            var client = new HttpClient();
-
-            var result = await client.PostAsync($"http://{ip}/channel/set", new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json"));
+            var userIdent = _contextAccessor.GetUserIdent();
+            await _mediator.Send(new ForwardControlRequest(userIdent, dto));
         }
     }
 }

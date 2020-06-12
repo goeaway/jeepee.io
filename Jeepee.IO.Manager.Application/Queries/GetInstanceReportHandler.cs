@@ -1,0 +1,63 @@
+﻿using Jeepee.IO.Core.Models.DTOs;
+using Jeepee.IO.Core.Models.Models;
+using Jeepee.IO.Manager.Application.Abstractions;
+using MediatR;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Jeepee.IO.Manager.Application.Queries
+{
+    public class GetInstanceReportHandler : IRequestHandler<GetInstanceReportRequest, IEnumerable<JeepeeInstanceReportDTO>>
+    {
+        private readonly IConfiguration _configuration;
+        private readonly IJeepeeControlStore _jeepeeControlStore;
+
+        public GetInstanceReportHandler(IConfiguration configuration, IJeepeeControlStore jeepeeControlStore)
+        {
+            _configuration = configuration;
+            _jeepeeControlStore = jeepeeControlStore;
+        } 
+
+        public async Task<IEnumerable<JeepeeInstanceReportDTO>> Handle(GetInstanceReportRequest request, CancellationToken cancellationToken)
+        {
+            var instances = _configuration
+                .GetSection("Jeepees")
+                .AsEnumerable()
+                .Where(c => c.Value != null)
+                .Select(c => JsonConvert.DeserializeObject<JeepeeInstanceInfo>(c.Value));
+
+            var successfulPings = new List<JeepeeInstanceReportDTO>();
+            var client = new HttpClient();
+
+            foreach (var instance in instances)
+            {
+                var online = false;
+                try
+                {
+                    var result = await client.GetAsync($"{instance.URL}/ping");
+                    online = result.StatusCode == System.Net.HttpStatusCode.OK;
+                }
+                catch
+                {
+                    // log but don't throw as we can continue
+                }
+
+                successfulPings.Add(new JeepeeInstanceReportDTO
+                {
+                    Available = _jeepeeControlStore.InstanceAvailable(instance.Id),
+                    Id = instance.Id,
+                    Online = online
+                });
+            }
+
+            return successfulPings;
+        }
+    }
+}

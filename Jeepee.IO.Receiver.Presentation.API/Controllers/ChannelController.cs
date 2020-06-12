@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Jeepee.IO.Core.Models.DTOs;
 using Jeepee.IO.Receiver.Application.Commands;
-using Jeepee.IO.Receiver.Presentation.API.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,9 +21,9 @@ namespace Jeepee.IO.Receiver.Presentation.API.Controllers
         }
 
         [HttpPost("set")]
-        public IActionResult Set(UpdateChannelModel model)
+        public IActionResult Set(JeepeeControlDTO dto)
         {
-            _mediator.Send(new UpdateChannel(model.Channel, model.Direction, model.On));
+            _mediator.Send(new UpdateChannel(dto.Channel, dto.Direction, dto.On));
             return Ok();
         }
     }

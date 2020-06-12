@@ -24,7 +24,7 @@ namespace Jeepee.IO.Manager.Presentation.API.Controllers
         [HttpPost]
         [Route("requestcontrol")]
         [Authorize]
-        public IActionResult RequestControl()
+        public IActionResult RequestControl(string jeepeeId)
         {
             // check if requested instance is available (if user already on it but expired that should be updated)
             // if not, check if this user has higher role

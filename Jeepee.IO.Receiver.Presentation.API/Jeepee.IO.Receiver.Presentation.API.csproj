@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Jeepee.IO.Core.Models\Jeepee.IO.Core.Models.csproj" />
     <ProjectReference Include="..\Jeepee.IO.Receiver.Application\Jeepee.IO.Receiver.Application.csproj" />
   </ItemGroup>
 
