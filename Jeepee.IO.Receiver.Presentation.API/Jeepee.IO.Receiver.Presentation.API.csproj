@@ -13,6 +13,7 @@
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.4" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
+    <PackageReference Include="Pippin.Adapters.Unosquare" Version="1.0.0" />
     <PackageReference Include="Pippin.Core" Version="1.0.0" />
     <PackageReference Include="Pippin.Extensions.Microsoft.DependencyInjection" Version="1.0.0" />
     <PackageReference Include="Serilog" Version="2.9.0" />

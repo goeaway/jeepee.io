@@ -1,12 +1,14 @@
 ﻿using Jeepee.IO.Core.Exceptions;
 using Jeepee.IO.Manager.Application.Abstractions;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -16,19 +18,22 @@ namespace Jeepee.IO.Manager.Application.Commands
     public class ForwardControlHandler : IRequestHandler<ForwardControlRequest>
     {
         private readonly IJeepeeControlStore _jeepeeControlStore;
+        private readonly IJeepeeInstanceInfoStore _infoStore;
         private readonly ILogger _logger;
+        private readonly IConfiguration _configuration;
 
-        public ForwardControlHandler(IJeepeeControlStore jeepeeControlStore, ILogger logger)
+        public ForwardControlHandler(IJeepeeInstanceInfoStore infoStore, IJeepeeControlStore jeepeeControlStore, ILogger logger)
         {
             _jeepeeControlStore = jeepeeControlStore;
             _logger = logger;
+            _infoStore = infoStore;
         }
 
         public async Task<Unit> Handle(ForwardControlRequest request, CancellationToken cancellationToken)
         {
-            var instanceInfo = _jeepeeControlStore.UserControl(request.UserIdent);
+            var instance = _jeepeeControlStore.GetInstanceForUser(request.UserIdent);
 
-            if (instanceInfo == null)
+            if (instance == null)
             {
                 throw new JeepeeHTTPException("User not allowed to control jeepee instance", HttpStatusCode.Forbidden);
             }
@@ -39,7 +44,7 @@ namespace Jeepee.IO.Manager.Application.Commands
                 request.DTO.Channel,
                 request.DTO.Direction,
                 request.DTO.On,
-                instanceInfo.Id);
+                instance);
 
             var client = new HttpClient();
 
@@ -48,7 +53,8 @@ namespace Jeepee.IO.Manager.Application.Commands
                 Encoding.UTF8,
                 "application/json");
 
-            await client.PostAsync($"{instanceInfo.URL}/channel/set", content);
+            var info = _infoStore.GetInfoForId(instance);
+            await client.PostAsync($"{info.URL}/channel/set", content);
 
             return Unit.Value;
         }

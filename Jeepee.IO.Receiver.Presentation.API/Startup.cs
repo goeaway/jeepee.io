@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Pippin;
+using Pippin.Adapters.Unosquare;
 using Pippin.Core;
 using Serilog;
 
@@ -50,6 +51,7 @@ namespace Jeepee.IO.Receiver.Presentation.API
             services.AddPippin(options =>
             {
                 options.AddAdapter<HubPinAdapter<MonitorHub>>();
+                options.AddSingletonAdapter(new UnosquarePinAdapter());
             });
         }
 
@@ -57,7 +59,6 @@ namespace Jeepee.IO.Receiver.Presentation.API
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseExceptionHandler(ExceptionHandler);
-            app.UseStaticFiles();
             app.UseHttpsRedirection();
             app.UseCors();
             app.UseRouting();

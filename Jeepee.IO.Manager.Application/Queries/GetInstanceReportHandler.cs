@@ -16,27 +16,21 @@ namespace Jeepee.IO.Manager.Application.Queries
 {
     public class GetInstanceReportHandler : IRequestHandler<GetInstanceReportRequest, IEnumerable<JeepeeInstanceReportDTO>>
     {
-        private readonly IConfiguration _configuration;
+        private readonly IJeepeeInstanceInfoStore _infoStore;
         private readonly IJeepeeControlStore _jeepeeControlStore;
 
-        public GetInstanceReportHandler(IConfiguration configuration, IJeepeeControlStore jeepeeControlStore)
+        public GetInstanceReportHandler(IJeepeeInstanceInfoStore infoStore, IJeepeeControlStore jeepeeControlStore)
         {
-            _configuration = configuration;
+            _infoStore = infoStore;
             _jeepeeControlStore = jeepeeControlStore;
         } 
 
         public async Task<IEnumerable<JeepeeInstanceReportDTO>> Handle(GetInstanceReportRequest request, CancellationToken cancellationToken)
         {
-            var instances = _configuration
-                .GetSection("Jeepees")
-                .AsEnumerable()
-                .Where(c => c.Value != null)
-                .Select(c => JsonConvert.DeserializeObject<JeepeeInstanceInfo>(c.Value));
-
             var successfulPings = new List<JeepeeInstanceReportDTO>();
             var client = new HttpClient();
 
-            foreach (var instance in instances)
+            foreach (var instance in _infoStore.GetAll())
             {
                 var online = false;
                 try
