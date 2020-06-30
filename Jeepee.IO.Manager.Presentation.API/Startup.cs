@@ -40,7 +40,7 @@ namespace Jeepee.IO.Manager.Presentation.API
                 });
             services.AddConfiguration(Configuration);
             services.AddMediatR(typeof(IJeepeeControlStore));
-            services.AddSingleton<IJeepeeControlStore>(new JeepeeControlStore());
+            //services.AddSingleton<IJeepeeControlStore>(new JeepeeControlStore());
             services.AddTransient(serviceProvider => Log.Logger);
         }
 
