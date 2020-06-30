@@ -27,9 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jeepee.IO.Manager.Presentat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{A5DAA263-8004-444E-B4D7-DCE0BF69625E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jeepee.IO.Core", "Jeepee.IO.Core\Jeepee.IO.Core.csproj", "{3FED31D6-099D-45BC-8C29-5FF792B0BE86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jeepee.IO.Core", "Jeepee.IO.Core\Jeepee.IO.Core.csproj", "{3FED31D6-099D-45BC-8C29-5FF792B0BE86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jeepee.IO.Core.Models", "Jeepee.IO.Core.Models\Jeepee.IO.Core.Models.csproj", "{6095231C-1FB3-42AB-B839-92482C58D481}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jeepee.IO.Core.Models", "Jeepee.IO.Core.Models\Jeepee.IO.Core.Models.csproj", "{6095231C-1FB3-42AB-B839-92482C58D481}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{03D64EF9-5920-4474-9F79-9198C0BF819F}"
 EndProject
@@ -37,11 +37,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{7861D434
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{47CA285B-2366-4CC0-8634-78EA289DB0E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jeepee.IO.Receiver.Tests", "Jeepee.IO.Receiver.Tests\Jeepee.IO.Receiver.Tests.csproj", "{D5BB28F4-A98E-41D4-B287-7C2907AF4DBC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jeepee.IO.Receiver.Tests", "Jeepee.IO.Receiver.Tests\Jeepee.IO.Receiver.Tests.csproj", "{D5BB28F4-A98E-41D4-B287-7C2907AF4DBC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jeepee.IO.Manager.Tests", "Jeepee.IO.Manager.Tests\Jeepee.IO.Manager.Tests.csproj", "{22E9D885-DE5E-4858-84F2-A33ACDE2765E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jeepee.IO.Manager.Tests", "Jeepee.IO.Manager.Tests\Jeepee.IO.Manager.Tests.csproj", "{22E9D885-DE5E-4858-84F2-A33ACDE2765E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jeepee.IO.Core.Tests", "Jeepee.IO.Core.Tests\Jeepee.IO.Core.Tests.csproj", "{753DBB88-40DE-4793-84D8-D6D3B54238FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Jeepee.IO.Core.Tests", "Jeepee.IO.Core.Tests\Jeepee.IO.Core.Tests.csproj", "{753DBB88-40DE-4793-84D8-D6D3B54238FA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Controller", "Controller", "{E51E0139-A43C-4242-BA34-9659CD7BD371}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{EB152762-C114-46B2-8AB1-3C4C0A58D4F8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{DA04D9D9-8D26-4908-B74C-1FA923284629}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Jeepee.IO.Controller.WinForms", "Jeepee.IO.Controller.WinForms\Jeepee.IO.Controller.WinForms.csproj", "{D869D0F2-6B8F-4281-A684-B95A2DA28832}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +93,10 @@ Global
 		{753DBB88-40DE-4793-84D8-D6D3B54238FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{753DBB88-40DE-4793-84D8-D6D3B54238FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{753DBB88-40DE-4793-84D8-D6D3B54238FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D869D0F2-6B8F-4281-A684-B95A2DA28832}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D869D0F2-6B8F-4281-A684-B95A2DA28832}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D869D0F2-6B8F-4281-A684-B95A2DA28832}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D869D0F2-6B8F-4281-A684-B95A2DA28832}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -107,6 +119,9 @@ Global
 		{D5BB28F4-A98E-41D4-B287-7C2907AF4DBC} = {03D64EF9-5920-4474-9F79-9198C0BF819F}
 		{22E9D885-DE5E-4858-84F2-A33ACDE2765E} = {47CA285B-2366-4CC0-8634-78EA289DB0E9}
 		{753DBB88-40DE-4793-84D8-D6D3B54238FA} = {7861D434-601A-44EA-834E-8F5039E98CBA}
+		{EB152762-C114-46B2-8AB1-3C4C0A58D4F8} = {E51E0139-A43C-4242-BA34-9659CD7BD371}
+		{DA04D9D9-8D26-4908-B74C-1FA923284629} = {E51E0139-A43C-4242-BA34-9659CD7BD371}
+		{D869D0F2-6B8F-4281-A684-B95A2DA28832} = {DA04D9D9-8D26-4908-B74C-1FA923284629}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {414A1D63-3AAE-410B-B89B-29E689BF3B0E}
