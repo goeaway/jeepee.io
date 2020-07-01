@@ -14,7 +14,7 @@ namespace Jeepee.IO.Controller.WinForms
 {
     public partial class Form1 : Form
     {
-        private readonly HttpClient _httpClient;
+        private readonly Controller _controller;
 
         public Form1()
         {
@@ -23,10 +23,7 @@ namespace Jeepee.IO.Controller.WinForms
             KeyDown += KeyDownHandler;
             KeyUp += KeyUpHandler;
 
-            _httpClient = new HttpClient
-            {
-                BaseAddress = new Uri("http://192.168.0.26")
-            };
+            _controller = new Controller();
         }
 
         private void KeyUpHandler(object sender, KeyEventArgs e)
@@ -36,26 +33,26 @@ namespace Jeepee.IO.Controller.WinForms
                 Application.Exit();
             }
 
-            StringContent content = null;
+            Command command = null;
             switch (e.KeyCode)
             {
                 case Keys.NumPad7:
-                    content = new StringContent(JsonConvert.SerializeObject(new { Channel = 1, Direction = true, On = true }), Encoding.UTF8, "application/json");
+                    command = new Command { Channel = 1, Direction = true, On = false };
                     break;
                 case Keys.NumPad9:
-                    content = new StringContent(JsonConvert.SerializeObject(new { Channel = 0, Direction = true, On = true }), Encoding.UTF8, "application/json");
+                    command = new Command { Channel = 0, Direction = true, On = false };
                     break;
                 case Keys.NumPad1:
-                    content = new StringContent(JsonConvert.SerializeObject(new { Channel = 1, Direction = false, On = true }), Encoding.UTF8, "application/json");
+                    command = new Command { Channel = 1, Direction = false, On = false };
                     break;
                 case Keys.NumPad3:
-                    content = new StringContent(JsonConvert.SerializeObject(new { Channel = 0, Direction = false, On = true }), Encoding.UTF8, "application/json");
+                    command = new Command { Channel = 0, Direction = false, On = false };
                     break;
             }
 
-            if(content != null)
+            if(command != null)
             {
-                _httpClient.PostAsync("channel/set", content);
+                _controller.Send(command);   
             }
         }
 
@@ -66,26 +63,26 @@ namespace Jeepee.IO.Controller.WinForms
                 Application.Exit();
             }
 
-            StringContent content = null;
+            Command command = null;
             switch (e.KeyCode)
             {
                 case Keys.NumPad7:
-                    content = new StringContent(JsonConvert.SerializeObject(new { Channel = 1, Direction = true, On = false }), Encoding.UTF8, "application/json");
+                    command = new Command { Channel = 1, Direction = true, On = true };
                     break;
                 case Keys.NumPad9:
-                    content = new StringContent(JsonConvert.SerializeObject(new { Channel = 0, Direction = true, On = false }), Encoding.UTF8, "application/json");
+                    command = new Command { Channel = 0, Direction = true, On = true };
                     break;
                 case Keys.NumPad1:
-                    content = new StringContent(JsonConvert.SerializeObject(new { Channel = 1, Direction = false, On = false }), Encoding.UTF8, "application/json");
+                    command = new Command { Channel = 1, Direction = false, On = true };
                     break;
                 case Keys.NumPad3:
-                    content = new StringContent(JsonConvert.SerializeObject(new { Channel = 0, Direction = false, On = false }), Encoding.UTF8, "application/json");
+                    command = new Command { Channel = 0, Direction = false, On = true };
                     break;
             }
 
-            if (content != null)
+            if (command != null)
             {
-                _httpClient.PostAsync("channel/set", content);
+                _controller.Send(command);
             }
         } 
 
