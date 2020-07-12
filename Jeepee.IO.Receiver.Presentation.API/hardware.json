@@ -2,9 +2,9 @@
   "Hardware": {
       "Channels": [
         {
-          "One": 24,
-          "Two": 23,
-          "Enable": 18
+          "One": 11,
+          "Two": 12,
+          "Enable": 13
         },
         {
           "One": 21,

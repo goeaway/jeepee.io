@@ -1,4 +1,5 @@
 ﻿using Jeepee.IO.Receiver.Application;
+using Jeepee.IO.Receiver.Application.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -24,9 +25,11 @@ namespace Jeepee.IO.Receiver.Presentation.API
             return collection;
         }
 
-        public static IServiceCollection AddConfiguration(this IServiceCollection collection, IConfiguration configuration)
+        public static IServiceCollection AddHardwareOptions(this IServiceCollection collection, IConfiguration configuration)
         {
-            return collection.AddSingleton(configuration);
+            var options = new HardwareOptions();
+            configuration.GetSection(HardwareOptions.Key).Bind(options);
+            return collection.AddSingleton(options);
         }
     }
 }

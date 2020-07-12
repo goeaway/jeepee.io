@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -7,7 +8,6 @@ using System.Threading.Tasks;
 using FluentValidation.AspNetCore;
 using Jeepee.IO.Receiver.Application.Behaviours;
 using Jeepee.IO.Receiver.Application.Commands;
-using Jeepee.IO.Receiver.Presentation.API.Hubs;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -45,13 +45,21 @@ namespace Jeepee.IO.Receiver.Presentation.API
             services.AddMediatR(Assembly.GetAssembly(typeof(UpdateChannelHandler)));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestLoggerBehaviour<,>));
-            services.AddConfiguration(Configuration);
+            services.AddHardwareOptions(Configuration);
             services.AddSignalR();
+
+            var env = Configuration.GetValue<string>("ASPNETCORE_ENVIRONMENT");
 
             services.AddPippin(options =>
             {
-                options.AddAdapter<HubPinAdapter<MonitorHub>>();
-                options.AddSingletonAdapter(new UnosquarePinAdapter());
+                if(env == "Development")
+                {
+                    options.AddAdapter(sp => new DebugAdapter(sp.GetRequiredService<ILogger>()));
+                } 
+                else
+                {
+                    options.AddSingletonAdapter(new UnosquarePinAdapter());
+                }
             });
         }
 
@@ -65,10 +73,6 @@ namespace Jeepee.IO.Receiver.Presentation.API
 
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
-                endpoints.MapHub<MonitorHub>("/monitorHub", options =>
-                {
-                    options.Transports = HttpTransportType.LongPolling;
-                });
             });
         }
 

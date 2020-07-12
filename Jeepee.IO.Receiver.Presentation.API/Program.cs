@@ -19,6 +19,10 @@ namespace Jeepee.IO.Receiver.Presentation.API
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    config.AddJsonFile("hardware.json", optional: false);
+                })
                 .UseStartup<Startup>();
     }
 }
