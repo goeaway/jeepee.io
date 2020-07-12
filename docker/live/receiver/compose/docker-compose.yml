@@ -28,3 +28,5 @@ services:
     restart: always
     networks:
       - app_bridge
+    volumes:
+      - ./hardware.json:/jeepee/app/hardware.json:ro

@@ -1,0 +1,16 @@
+{
+    "Hardware": {
+        "Channels": [
+          {
+            "One": 22,
+            "Two": 27,
+            "Enable": 17
+          },
+          {
+            "One": 11,
+            "Two": 9,
+            "Enable": 10
+          }
+        ]
+      }
+    }
