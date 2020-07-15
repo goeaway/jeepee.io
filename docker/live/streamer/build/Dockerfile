@@ -1,6 +1,6 @@
 FROM resin/raspberrypi3-debian:stretch
 
-RUN apt-get && apt-get install -y --no-install-recommends curl
+RUN apt-get update && apt-get install -y --no-install-recommends curl
 
 RUN curl http://www.linux-projects.org/listing/uv4l_repo/lrkey.asc | apt-key add -
 
