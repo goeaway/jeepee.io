@@ -4,7 +4,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl
 
 RUN curl http://www.linux-projects.org/listing/uv4l_repo/lrkey.asc | apt-key add -
 
-RUN echo "deb http://www.linux-projects.org/listing/uv4l_repo/raspbian/ stretch main" >> /etc/apt/sources.listing
+RUN echo "deb http://www.linux-projects.org/listing/uv4l_repo/raspbian/ stretch main" >> /etc/apt/sources.list
 
 RUN apt-get install -y --no-install-recommends \
     uv4l \
