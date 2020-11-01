@@ -4,10 +4,12 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using FluentValidation.AspNetCore;
 using Jeepee.IO.Receiver.Application.Behaviours;
 using Jeepee.IO.Receiver.Application.Commands;
+using Jeepee.IO.Receiver.Presentation.API.Hubs;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -34,6 +36,8 @@ namespace Jeepee.IO.Receiver.Presentation.API
 
         public IConfiguration Configuration { get; }
 
+        private const string AllowAllCorsPolicy = "allowall";
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -47,6 +51,16 @@ namespace Jeepee.IO.Receiver.Presentation.API
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(RequestLoggerBehaviour<,>));
             services.AddHardwareOptions(Configuration);
             services.AddSignalR();
+            services.AddCors(options =>
+            {
+                options.AddPolicy(AllowAllCorsPolicy, builder =>
+                {
+                    builder.WithOrigins("http://localhost.app.com:30");
+                    builder.AllowAnyMethod();
+                    builder.AllowAnyHeader();
+                    builder.AllowCredentials();
+                });
+            });
 
             var env = Configuration.GetValue<string>("ASPNETCORE_ENVIRONMENT");
 
@@ -68,11 +82,12 @@ namespace Jeepee.IO.Receiver.Presentation.API
         {
             app.UseExceptionHandler(ExceptionHandler);
             app.UseHttpsRedirection();
-            app.UseCors();
+            app.UseCors(AllowAllCorsPolicy);
             app.UseRouting();
 
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();
+                endpoints.MapHub<JeepeeHub>("/jeepeehub");
             });
         }
 

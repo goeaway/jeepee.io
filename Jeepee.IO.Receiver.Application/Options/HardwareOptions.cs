@@ -12,5 +12,6 @@ namespace Jeepee.IO.Receiver.Application.Options
         public IList<Channel> Channels { get; set; }
             = new List<Channel>();
         
+        public string Id { get; set; }
     }
 }

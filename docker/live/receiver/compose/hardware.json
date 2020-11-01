@@ -1,5 +1,6 @@
 {
     "Hardware": {
+		"Id": "Jeepee1",
         "Channels": [
           {
             "One": 22,

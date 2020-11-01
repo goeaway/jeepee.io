@@ -13,7 +13,7 @@ RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
     uv4l \
     uv4l-raspicam \
-    # uv4l-raspicam-extras \
+    uv4l-raspicam-extras \
     uv4l-webrtc
 
 EXPOSE 8080
