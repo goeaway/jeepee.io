@@ -10,31 +10,55 @@ using System.Threading.Tasks;
 
 namespace Jeepee.IO.Receiver.Presentation.API.Hubs
 {
+    public static class ConnectionTracker
+    {
+        public static bool UserConnected => !string.IsNullOrEmpty(ConnectedUser);
+        public static string ConnectedUser = string.Empty;
+    }
+
     public class JeepeeHub : Hub
     {
         private readonly IMediator _mediator;
-        private readonly HardwareOptions _options;
 
-        public JeepeeHub(IMediator mediator, HardwareOptions options)
+        public JeepeeHub(IMediator mediator)
         {
             _mediator = mediator;
-            _options = options;
         }
 
-        public Task JoinJeepee()
+        public override Task OnConnectedAsync()
         {
-            return Groups.AddToGroupAsync(Context.ConnectionId, _options.Id);
+            // we only allow one connection at a time on this hub
+            if(ConnectionTracker.UserConnected)
+            {
+                Context.Abort();
+            }
+            else
+            {
+                // if allowed, set the tracker to hold this connection id
+                ConnectionTracker.ConnectedUser = Context.ConnectionId;
+            }
+
+            return base.OnConnectedAsync();
         }
 
-        public Task LeaveJeepee()
+        public override Task OnDisconnectedAsync(Exception exception)
         {
-            return Groups.RemoveFromGroupAsync(Context.ConnectionId, _options.Id);
+            // untrack if the allowed connection is disconnecting, so other connections can now use
+            if(Context.ConnectionId == ConnectionTracker.ConnectedUser)
+            {
+                ConnectionTracker.ConnectedUser = string.Empty;
+            }
+            return base.OnDisconnectedAsync(exception);
         }
 
         public async Task Set(JeepeeControlDTO dto)
         {
-            await _mediator.Send(new UpdateChannel(dto.Channel, dto.Direction, dto.On));
-            await Clients.Group(_options.Id).SendAsync("Set", dto);
+            // only act on the request if the allowed connection is making it
+            if(Context.ConnectionId == ConnectionTracker.ConnectedUser)
+            {
+                await _mediator.Send(new UpdateChannel(dto.Channel, dto.Direction, dto.On));
+                await Clients.All.SendAsync("Set", dto);
+            }
         }
     }
 }
