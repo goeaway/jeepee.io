@@ -20,7 +20,6 @@ namespace Jeepee.IO.Manager.Application.Commands
         private readonly IJeepeeControlStore _jeepeeControlStore;
         private readonly IJeepeeInstanceInfoStore _infoStore;
         private readonly ILogger _logger;
-        private readonly IConfiguration _configuration;
 
         public ForwardControlHandler(IJeepeeInstanceInfoStore infoStore, IJeepeeControlStore jeepeeControlStore, ILogger logger)
         {

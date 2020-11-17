@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Jeepee.IO.Core.Models.DTOs;
 using Jeepee.IO.Receiver.Application.Commands;
+using Jeepee.IO.Receiver.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +19,12 @@ namespace Jeepee.IO.Receiver.Presentation.API.Controllers
         public ChannelController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpGet("getchannels")]
+        public Task<IEnumerable<ChannelDTO>> GetChannels()
+        {
+            return _mediator.Send(new GetChannels());
         }
 
         [HttpPost("set")]

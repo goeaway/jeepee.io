@@ -1,4 +1,5 @@
-﻿using Jeepee.IO.Receiver.Application.Options.Models;
+﻿using Jeepee.IO.Core.Models.DTOs;
+using Jeepee.IO.Receiver.Application.Options.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;

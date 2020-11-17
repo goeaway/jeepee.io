@@ -3,15 +3,17 @@
     "Id":  "Jeepee1",
     "Channels": [
       {
+        "Name": "Left",
         "One": 11,
         "Two": 12,
         "Enable": 13
       },
       {
+        "Name": "Right",
         "One": 21,
         "Two": 20,
         "Enable": 16
       }
     ]
   }
-  }
+}
