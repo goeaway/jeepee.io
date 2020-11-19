@@ -28,16 +28,3 @@ services:
       - app_bridge
     volumes:
       - ./hardware.json:/jeepee/app/hardware.json:ro
-      
-  # jeepee streamer service - hosts the uv4l service with webrtc enabled    
-  # streamer:
-  #   image: siouija/jeepee-streamer
-  #   container_name: jeepee-streamer-container
-  #   privileged: true
-  #   restart: always
-  #   ports:
-  #     - "8080:8080"
-  #   networks: 
-  #     - app_bridge 
-  #   volumes:
-  #     - ./uv4l-raspicam.conf:/etc/uv4l/uv4l-raspicam.conf:ro

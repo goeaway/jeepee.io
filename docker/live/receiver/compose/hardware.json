@@ -1,17 +1,19 @@
 {
-    "Hardware": {
-		"Id": "Jeepee1",
-        "Channels": [
-          {
-            "One": 22,
-            "Two": 27,
-            "Enable": 17
-          },
-          {
-            "One": 11,
-            "Two": 9,
-            "Enable": 10
-          }
-        ]
+  "Hardware": {
+    "Id":  "Jeepee1",
+    "Channels": [
+      {
+        "Name": "L",
+        "One": 22,
+        "Two": 27,
+        "Enable": 17
+      },
+      {
+        "Name": "R",
+        "One": 11,
+        "Two": 9,
+        "Enable": 10
       }
-    }
+    ]
+  }
+}

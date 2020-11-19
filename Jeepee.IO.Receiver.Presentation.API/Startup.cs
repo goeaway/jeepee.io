@@ -80,9 +80,9 @@ namespace Jeepee.IO.Receiver.Presentation.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors(AllowAllCorsPolicy);
             app.UseExceptionHandler(ExceptionHandler);
             app.UseHttpsRedirection();
-            app.UseCors(AllowAllCorsPolicy);
             app.UseRouting();
 
             app.UseEndpoints(endpoints => {
