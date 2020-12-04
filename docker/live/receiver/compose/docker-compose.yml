@@ -12,9 +12,10 @@ services:
       - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./index.html:/controller/index.html:ro
+      - ./bundle.js:/controller/bundle.js:ro
     depends_on:
       - jeepee
-      # - streamer
     networks:
       - app_bridge
       
