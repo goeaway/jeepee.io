@@ -15,7 +15,7 @@ If you'd like to learn how I did this, or want to copy it to get your own versio
 
 So here it is, in all it's glory. I used a Lego set as the base because it meant I would have a well built model to work with, instead of the shoddy rubbish I would have been able to build myself. I've added a couple of modifications to the [base set](https://www.amazon.co.uk/LEGO-42065-Tracked-Racer-Building/dp/B01J41LWFW/ref=asc_df_B01J41LWFW/), mainly to provide a load more space for all the components I need. I also upgraded the motors to be L motors, because the ones that come with the set don't have enough POWER for all the added weight (or at least that's the excuse we're going with).
 
-// show picture of current thingy majig
+![jeepee tank](https://joetm.space/assets/articleimages/jeepee_2.jpg)
 
 // include picture of "brain", pi + board and LED
 
