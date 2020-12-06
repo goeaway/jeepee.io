@@ -29,46 +29,125 @@ Here's a detailed schematic of the electronic components, based of the system by
 
 ![PCB schematics](https://joetm.space/assets/articleimages/jeepee_9.jpg)
 
-If you happen to be an electrical engineer you may be squirming just looking at this, but it does get the job done! The jumper wires labelled xP (purple), xG (green) and xB (blue) are the wires that connect to the GPIO pins on the Pi. The purple wire is the enable pin for the channel, the blue wire is the "one" pin and the green is the "two" pin. 
+If you happen to be an electrical engineer you may be squirming just looking at this, but it does get the job done! The jumper wires labelled xP (purple), xG (green) and xB (blue) are the wires that connect to the GPIO pins on the Pi, and a set of these make up what I'm calling a "channel", the controller then sends signals to update a channel, which will result in a motor turning on or off, or changing direction. The purple wire is the enable pin for the channel, the blue wire is the "one" pin and the green is the "two" pin. 
 
-The below image is of the schematics real counter part, in all it's jumper wire glory. Originally I had this circuit working on a breadboard, but I wanted to move it over to a PCB to be more permenant and to have a smaller form factor. It took a few tries and a slightly sore back from hunching over it for hours but I'm very happy with the result. I think of the whole project I learnt the most at this point.
+The below image is of the schematic's real counter part, in all it's jumper wire glory. Originally I had this circuit working on a breadboard, but I wanted to move it over to a PCB to be more permenant and to have a smaller form factor. It took a few tries and a slightly sore back from hunching over it for hours but I'm very happy with the result. I think of the whole project I learnt the most at this point.
 
 ![Real PCB](https://joetm.space/assets/articleimages/jeepee_4.jpg)
+
+![Pi Connections](https://joetm.space/assets/articleimages/jeepee_5.jpg)
+
+The above image shows the connections from the Pi to the PCB, You can kind of choose where the purple, blue and green pins of each channel connect to, as long as the pins on the board support GPIO operations. Later on you'll see where to set the channels in the web api.
 
 ## The software
 
 The below shows a diagram of the system architecture.
-// show draw.io flow chart of software components, controller -> nginx -> web api docker -> GPIO pins
 
-I made the decision early on to use Docker because I wanted to be able to easily install this software on multiple RC vehicles. This choice turned out to really help because I ended up needing to completely wipe the Pi when it somehow became corrupted. 
+![software arch](https://joetm.space/assets/articleimages/jeepee_6.jpg)
 
-// show picture of controller site
+I made the decision early on to use Docker because I wanted to be able to easily install this software on multiple RC vehicles. This choice turned out to really help because I ended up needing to completely wipe the Pi a few times when things went wrong! 
+
+![Controller UI](https://joetm.space/assets/articleimages/jeepee_7.jpg)
 
 The controller site itself is built with React and accepts a few different methods of control. Initially I'd planned to have a website running on my computer, but to be more inline with my philosophy of making it easy to reinstall, I moved the site onto the Pi as well, alongside the Web API receiver (flashbacks of IR transmitter next to the receiver) (thousand yard stare) (credence clearwater revival)...
 
-// show picture of some important part of the api code, mediatr maybe
+The controller sends requests to the API via web sockets using SignalR, but the request is reverse proxied by Nginx. This is running in a container on the Pi and listens on port 80. The Nginx container also routes traffic for the controller if it's running onboard.
 
-The API code is really simple, and uses a great library [unosquare](https://github.com/unosquare/raspberryio) to operate changes to the GPIO pins. In the API, I've created the concept of a channel, where requests coming in will update an entire channel. A channel will consist of 3 GPIO pins, 1,2 and enable.
 
-// remind myself of how that works before finsihing this bit
+```
+public class UpdateChannelHandler : IRequestHandler<UpdateChannel>
+{
+    private readonly ILogger _logger;
+    private readonly IPinSetter _pinSetter;
+    private readonly HardwareOptions _hardwareOptions;
 
-The web api sits behind an Nginx docker container, which routes requests through to the API, or to the onboard controller
+    public UpdateChannelHandler(ILogger logger, IPinSetter pinSetter, HardwareOptions hardwareOptions)
+    {
+        _logger = logger;
+        _pinSetter = pinSetter;
+        _hardwareOptions = hardwareOptions;
+    }
 
-// show nginx config
+    public async Task<Unit> Handle(UpdateChannel request, CancellationToken cancellationToken)
+    {
+        _logger.Information("Update channel request started CH: {Channel}, D: {Direction}, O: {On}", request.Channel, request.Direction, request.On);
 
-docker-compose is a great tool which makes orchestrating multiple containers at once really simple, mainly through it's compose yaml. Here I'm just defining which images should be used, and setting some config items. Most notably in the jeepee receiver container, I set the privileged flag to true, so the docker container is allowed to set the GPIO pins
+        var channel = _hardwareOptions.Channels[request.Channel];
+        await _pinSetter.SetPinAsync(channel.Enable, request.On);
+        await _pinSetter.SetPinAsync(channel.One, request.Direction);
+        await _pinSetter.SetPinAsync(channel.Two, !request.Direction);
 
-// show important part of docker compose for privileged 
+        return Unit.Value;
+    }
+}
+```
 
-Finally, to be able to get a camera feed on the Pi, I used uv4l with some extras to get it working. I initially tried to use this in another container, but couldn't get it working because it can't find the camera's device in the container. Something to look at in future. Having said that, it's really simple to get working.
+The code snippet above shows the channel update handler in the api. I'm using Mediatr to split up the code into different sections based on feature. I really like this architectural style as it makes adding new stuff and testing really easy.
 
-// show uv4l and how simple it is
+The handler will find the channel info from the injected hardware options and then use an IPinSetter interface to update the pins. The enable pin of the channel is set based on the On property of the request. On means that the user is pressing down the button for the channel. the "one" pin is set based on the direction value of the request and the "two" is set as the inverse of that. I added the IPinSetter interface so that if I needed to run the API on my windows computer I could debug the pin setting. 
+
+The IPinSetter interface is from a nuget package I created for the abstraction, this allows you to swap in and out multiple IPinAdapters depending on where the API is running, if you want to. The most important IPinAdapter is the UnosquarePinAdapter, which makes use of a great library [unosquare](https://github.com/unosquare/raspberryio) that actually sets the GPIO pins for us. Its really really easy to use, as you can see below...
+
+```
+public void SetPin(int pinNumber, bool on)
+{
+    var pin = Pi.Gpio[pinNumber];
+    pin.PinMode = GpioPinDriveMode.Output;
+    pin.Write(on);
+}
+```
+
+To manage these containers on the Pi, I use docker-compose, which allows me to define the config for the whole system in a yaml file:
+
+```
+version: "2"
+networks:
+  app_bridge:
+    driver: bridge
+services:
+  # nginx service - handles incoming requests to the server and forwards to app if applicable
+  nginx:
+    image: nginx
+    container_name: nginx-container
+    restart: always
+    ports: 
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./index.html:/controller/index.html:ro
+      - ./bundle.js:/controller/bundle.js:ro
+    depends_on:
+      - jeepee
+    networks:
+      - app_bridge
+      
+  # jeepee receiver service - application, sits behind nginx and controls the pins, and monitoring modules
+  jeepee:
+    image: siouija/jeepee-receiver
+    container_name: jeepee-receiver-container
+    privileged: true # required so we can interact with the pins
+    restart: always
+    networks:
+      - app_bridge
+    volumes:
+      - ./hardware.json:/jeepee/app/hardware.json:ro
+```
+An important bit to note is the privileged key on the jeepee definition. This must be true for us to interact with the pins, because docker doesn't allow that kind of operation without it.
+
+Finally, to be able to get a camera feed on the Pi, I used uv4l with some extras to get it working. I initially tried to use this in another container, but couldn't get it working because it can't find the camera's device in the container, even with the privileged flag set. Something to look at in future. Having said that, it's really simple to get working. [check this out to see how](https://joetm.space/article/uv4l)
 
 ## Demo
 
 // add video of my just controlling it from website on my desk, just show that me using controller in chrome moving sticks moves the tank tracks
 
 ## Installation
+
+This is a quick guide on how to install the software part and assumes you've got your hardware set up and ready to go.
+
+1. You may have already set up your raspberry pi, but if you haven't yet, [check out this tutorial](https://joetm.space/article/rpi-setup) I made on how to get the basics set up.
+2. Set up docker and docker-compose, you can use this [guide I made](https://joetm.space/article/docker)
+3. 
+
 
 // link again to lego set + lego motors
 
