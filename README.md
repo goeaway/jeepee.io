@@ -31,6 +31,8 @@ Here's a detailed schematic of the electronic components, based of the system by
 
 If you happen to be an electrical engineer you may be squirming just looking at this, but it does get the job done! The jumper wires labelled xP (purple), xG (green) and xB (blue) are the wires that connect to the GPIO pins on the Pi, and a set of these make up what I'm calling a "channel", the controller then sends signals to update a channel, which will result in a motor turning on or off, or changing direction. The purple wire is the enable pin for the channel, the blue wire is the "one" pin and the green is the "two" pin. 
 
+This configuration supports two channels, one for each side of the chip, but if more channels are needed you can add another chip in series.
+
 The below image is of the schematic's real counter part, in all it's jumper wire glory. Originally I had this circuit working on a breadboard, but I wanted to move it over to a PCB to be more permenant and to have a smaller form factor. It took a few tries and a slightly sore back from hunching over it for hours but I'm very happy with the result. I think of the whole project I learnt the most at this point.
 
 ![Real PCB](https://joetm.space/assets/articleimages/jeepee_4.jpg)
@@ -146,16 +148,13 @@ This is a quick guide on how to install the software part and assumes you've got
 
 1. You may have already set up your raspberry pi, but if you haven't yet, [check out this tutorial](https://joetm.space/article/rpi-setup) I made on how to get the basics set up.
 2. Set up docker and docker-compose, you can use this [guide I made](https://joetm.space/article/docker)
-3. 
-
-
-// link again to lego set + lego motors
-
-// add links to setup PI, docker, uv4l
-
-// explain to just copy all the files from the docker compose folder in the repo
-
-// set hardware.json data to correct pins you added
+3. Clone the jeepee.io repo and copy all the files from [here](https://github.com/goeaway/jeepee.io/tree/master/docker/live/receiver/compose) into a new directory on your Raspberry Pi.
+4. Update the hardware.json file to point to the correct pins for each channel, You can also change the name for each of them here and it will update on the controller website.
+5. Get [uv4l installed](https://joetm.space/article/uv4l) so you can stream from the Pi
+7. start the uv4l service with `sudo service uv4l_raspicam start`
+8. run `docker-compose up` in the directory with the docker-compose yaml
+9. On any device connected to the same network as the Pi, go to `http://{pi ip address}/controller` where you should be able to see the stream from the camera and be able to control the vehicle!
+10. The uv4l service and the containers should all start up on boot as well, so once you've done this all once it should be good to go forever.
 
 ## Wrapping up
 
