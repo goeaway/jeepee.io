@@ -25,7 +25,7 @@ The L293d chip in the middle is used to "upscale" the voltage of the signals fro
 
 I then connected up the live and ground wires of each lego motor to that chip. Each of these motors actually has four wires, but for simple on/off control like we're doing here, you only need to use the middle two. I think the outer two are used for speed control.
 
-Here's a detailed schematic of the electronic components, based of the system by Patrick in the above article. I also added an LED that would turn on when the 9v battery pack was on, so it was easy to see if I'd left it on by accident!
+Here's a detailed schematic of the electronic components, based off the system by Patrick in the above article. I also added an LED that would turn on when the 9v battery pack was on, so it was easy to see if I'd left it on by accident!
 
 ![PCB schematics](https://joetm.space/assets/articleimages/jeepee_9.jpg)
 
