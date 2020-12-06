@@ -2,11 +2,11 @@
 
 The first thing I wanted to do with a Raspberry Pi when I heard about them was to chuck it on an RC vehicle and be able to control it from my desk. If it was smart enough to get a beer from the fridge for me that'd be a huge bonus.
 
-This thing has gone through a few iterations and has spent a lot of time gathering dust between each of those. I started out with a simple program that could send infrared signals to a Lego IR receiver upon receiving HTTP requests. I quickly scrapped that solution after a friend burst out laughing at the thought of it sending an infrared signal less than an inch from the transmitter to the receiver. He found it hilarious that the transmitter was onboard the vehicle with the receiver, and after thinking about it myself, I agreed with him. So did the only thing I knew how at that point, leave it alone for ages and hope the future me would come along and try and make it a bit better.
+This thing has gone through a few iterations and has spent a lot of time gathering dust between each of those. I started out with a simple program that could send infrared signals to a Lego IR receiver upon receiving HTTP requests. I quickly scrapped that solution after a friend burst out laughing at the thought of it sending an infrared signal less than an inch from the transmitter to the receiver. He found it hilarious that the transmitter was onboard the vehicle with the receiver, and after thinking about it myself, I agreed with him. So I did the only thing I knew how at that point, leave it alone for ages and hope the future me would come along and try and make it a bit better.
 
 Which fortunately I did, after a couple of years...
 
-In its current state, the software is slightly more sophisticated. I have a .NET Core Web API running in a Docker container on the Pi, which upon receiving update requests from a controller via web sockets sets GPIO pins that are connected directly to a set of Lego power functions motor. I also have a camera onboard which can stream fairly low latency/not terrible quality video.
+In its current state, the software is slightly more sophisticated. I have a .NET Core Web API running in a Docker container on the Pi, which upon receiving update requests from a controller via web sockets sets GPIO pins that are connected directly to a set of Lego power functions motors. I also have a camera onboard which can stream fairly low latency/not terrible quality video.
 I like to think that friend wouldn't scoff at this version.
 
 If you'd like to learn how I did this, or want to copy it to get your own version up and running, read on...
