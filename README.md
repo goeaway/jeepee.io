@@ -17,19 +17,23 @@ So here it is, in all it's glory. I used a Lego set as the base because it meant
 
 ![jeepee tank](https://joetm.space/assets/articleimages/jeepee_2.jpg)
 
-// include picture of "brain", pi + board and LED
+![internals](https://joetm.space/assets/articleimages/jeepee_3.jpg)
 
 Here are all the important bits. The Pi itself receives commands from the controller, and using the web api I built converts those commands into signals sent to the Lego motors. The motors themselves need 9v of power, but the Pi is only capable of providing 5v. To deal with this, we have a 9v battery on board as well to provide the required power. 
 
 The L293d chip in the middle is used to "upscale" the voltage of the signals from the Pi so they're powerful enough for the motors. Or something, admittedly I'm not very good with electronics so couldn't say exactly what's going on here but I got the idea for this method from [this excellent article](https://www.hackster.io/Notthemarsian/take-control-over-lego-power-functions-ee0bfa).
 
 I then connected up the live and ground wires of each lego motor to that chip. Each of these motors actually has four wires, but for simple on/off control like we're doing here, you only need to use the middle two. I think the outer two are used for speed control.
-// show off how i cut the lego motor wires
 
 Here's a detailed schematic of the electronic components, based of the system by Patrick in the above article. I also added an LED that would turn on when the 9v battery pack was on, so it was easy to see if I'd left it on by accident!
-// include picture of schematic so people can copy, provide short explanation of it#
-// show close up of the real life board
-The soldering took a few tries but ended up being one of my favourite parts of the project.
+
+![PCB schematics](https://joetm.space/assets/articleimages/jeepee_9.jpg)
+
+If you happen to be an electrical engineer you may be squirming just looking at this, but it does get the job done! The jumper wires labelled xP (purple), xG (green) and xB (blue) are the wires that connect to the GPIO pins on the Pi. The purple wire is the enable pin for the channel, the blue wire is the "one" pin and the green is the "two" pin. 
+
+The below image is of the schematics real counter part, in all it's jumper wire glory. Originally I had this circuit working on a breadboard, but I wanted to move it over to a PCB to be more permenant and to have a smaller form factor. It took a few tries and a slightly sore back from hunching over it for hours but I'm very happy with the result. I think of the whole project I learnt the most at this point.
+
+![Real PCB](https://joetm.space/assets/articleimages/jeepee_4.jpg)
 
 ## The software
 
