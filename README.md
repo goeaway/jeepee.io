@@ -140,7 +140,7 @@ Finally, to be able to get a camera feed on the Pi, I used uv4l with some extras
 
 ## Demo
 
-// add video of my just controlling it from website on my desk, just show that me using controller in chrome moving sticks moves the tank tracks
+[Click here to watch a video demo of Jeepee](https://youtu.be/MRDG4w7uOJ4)
 
 ## Installation
 
